@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- FastDDS 单播发现 profile —— 仅当网络丢多播、ros2 node list 看不到机械臂节点时才用。
+
+     用法：
+       1. 把下面的 JETSON_IP_REPLACE_ME 改成机器人 Jetson 的实际 IP；
+       2. 另存为 fastdds_unicast_profile.xml（去掉 .template）；
+       3. export FASTRTPS_DEFAULT_PROFILES_FILE=~/develop/sdk/fastdds_unicast_profile.xml
+       4. 再 source / 跑程序。
+       5. 机器人方也要在 Jetson 端配一份指向【你服务器 IP】的同类 profile，双向才通。
+
+     注意：initialPeersList 里必须保留 127.0.0.1（本机），否则会把默认的本地发现也顶掉，
+           导致连本机自己的节点都发现不了（已踩过的坑）。 -->
+<dds>
+    <profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles">
+        <participant profile_name="unicast_default" is_default_profile="true">
+            <rtps>
+                <builtin>
+                    <initialPeersList>
+                        <!-- 本机：保留本地发现 -->
+                        <locator>
+                            <udpv4>
+                                <address>127.0.0.1</address>
+                            </udpv4>
+                        </locator>
+                        <!-- 机器人 Jetson：改成实际 IP -->
+                        <locator>
+                            <udpv4>
+                                <address>JETSON_IP_REPLACE_ME</address>
+                            </udpv4>
+                        </locator>
+                    </initialPeersList>
+                </builtin>
+            </rtps>
+        </participant>
+    </profiles>
+</dds>

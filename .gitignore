@@ -9,3 +9,4 @@ log/
 *.swp
 .vscode/
 .idea/
+sdk/fastdds_unicast_profile.xml
