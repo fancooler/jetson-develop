@@ -1,0 +1,6 @@
+int64 instance_id   # 必填
+string operation    # pause / resume
+string reason
+---
+bool success
+string failure_reason

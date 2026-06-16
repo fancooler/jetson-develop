@@ -1,0 +1,17 @@
+int64 instance_id               # 可选，精确查某实例；0=不过滤
+int64 template_id               # 可选；0=不过滤
+string task_type                # 可选；空=不过滤
+builtin_interfaces/Time time_from
+builtin_interfaces/Time time_to
+string result                   # 可选：success/failed/terminated
+uint32 page_size                # 0=节点默认值
+# 键集游标（首页全填 0）
+int64 cursor_finished_at_sec
+uint32 cursor_finished_at_nanosec
+int64 cursor_instance_id
+---
+bool success
+string failure_reason
+uint32 total_count              # 仅首页（游标全 0）返回
+bool has_more
+TaskInstanceSummary[] instances

@@ -1,0 +1,5 @@
+int64 template_id   # 必填，0 无效
+---
+bool success
+string failure_reason
+TaskTemplateDetail detail

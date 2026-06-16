@@ -1,0 +1,5 @@
+int64 template_id       # 必填
+string parameters_json  # 待校验入参 JSON
+---
+bool can_execute
+string failure_reason

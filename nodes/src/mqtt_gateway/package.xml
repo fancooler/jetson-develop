@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>mqtt_gateway</name>
+  <version>0.1.0</version>
+  <description>MQTT ↔ ROS2 task gateway node: receives commands from cloud server via MQTT, forwards to task_manager, and reports results back</description>
+  <maintainer email="lvyongsh@msn.com">lvyong</maintainer>
+  <license>Apache-2.0</license>
+
+  <depend>rclpy</depend>
+  <depend>task_interfaces</depend>
+  <depend>builtin_interfaces</depend>
+
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

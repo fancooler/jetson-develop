@@ -1,0 +1,8 @@
+# 回准备位（HOME 关节角，来自 config_dual）
+string arm                # "left" | "right" | "both"
+float64 timeout           # 秒；<=0 用节点默认
+---
+bool success
+string message
+---
+float64 max_error_deg

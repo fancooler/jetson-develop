@@ -1,0 +1,8 @@
+int64 template_id       # 必填
+string parameters_json  # 执行入参
+int32 priority          # 可选，越大越高，默认 0
+string idempotency_key  # 可选，防重复下发
+---
+bool started            # true=创建成功（含进入 waiting 队列）
+int64 instance_id
+string failure_reason

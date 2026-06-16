@@ -1,0 +1,5 @@
+# 切换控制模式
+string mode             # "position" | "impedance"
+---
+bool success
+string message

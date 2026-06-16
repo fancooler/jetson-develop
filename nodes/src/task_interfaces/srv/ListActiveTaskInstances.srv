@@ -1,0 +1,7 @@
+string task_type    # 可选
+int64 template_id   # 可选，0=不过滤
+string status       # 可选：waiting/running/paused；空=waiting+running
+---
+bool success
+string failure_reason
+TaskInstanceSummary[] instances

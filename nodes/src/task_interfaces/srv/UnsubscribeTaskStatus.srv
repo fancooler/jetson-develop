@@ -1,0 +1,4 @@
+string subscription_id  # 必填
+---
+bool success
+string failure_reason

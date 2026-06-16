@@ -1,0 +1,10 @@
+# 移动到目标关节角（绝对，度）
+string arm                # "left" | "right" | "both"
+float64[] joints_left     # 长度 7，arm 含 left/both 时必填
+float64[] joints_right    # 长度 7，arm 含 right/both 时必填
+float64 timeout           # 秒；<=0 用节点默认
+---
+bool success
+string message
+---
+float64 max_error_deg     # 当前距目标的最大关节误差（度）

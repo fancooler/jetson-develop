@@ -1,0 +1,6 @@
+int64 instance_id   # 必填
+string reason       # 可选，审计用
+bool force          # 可选，true=立即中断不等优雅收尾
+---
+bool terminated
+string failure_reason

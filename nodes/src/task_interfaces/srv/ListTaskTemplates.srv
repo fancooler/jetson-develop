@@ -1,0 +1,5 @@
+string task_type    # 可选，空=返回全部
+---
+bool success
+string failure_reason
+TaskTemplateSummary[] templates

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>camera_driver</name>
+  <version>0.0.0</version>
+  <description>三路 RealSense → ROS2 image_raw 发布节点（头部 D435 + 左/右腕 D405）</description>
+  <maintainer email="lvyongsh@msn.com">lvyong</maintainer>
+  <license>MIT</license>
+
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>cv_bridge</exec_depend>
+  <!-- pyrealsense2 / python3-opencv 为系统依赖（pyrealsense2 在 Jetson 上由源码编译安装），不走 rosdep -->
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

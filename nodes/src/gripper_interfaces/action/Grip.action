@@ -1,0 +1,11 @@
+# 夹爪运动到目标位置并阻塞等待到位
+string side           # "left" | "right" | "both"
+float64 position      # 目标位置 mm（约 2=闭合 ~ 85=张开）
+float64 max_effort    # 最大力 N，<=0 用节点默认
+float64 timeout       # 秒，<=0 用节点默认
+---
+bool success
+string message
+float64[] position    # 各动作 side 的实际到位位置 mm（left 在前，both 时两项）
+---
+float64 max_error_mm  # 当前距目标的最大位置误差 mm

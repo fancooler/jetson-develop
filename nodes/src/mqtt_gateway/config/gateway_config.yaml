@@ -1,0 +1,20 @@
+# mqtt_gateway 连接参数
+# 机器人序列号(sn)和 broker 地址从 $ROBOTS_YAML 按 $ROBOT_ID 读取，无需在此配置。
+
+mqtt:
+  host: "192.168.124.200"    # MQTT broker 地址
+  port: 1883
+  keepalive: 60
+  client_id: ""     # 空则自动生成 mqtt_gateway_{sn}_{随机}
+  # username: ""
+  # password: ""
+
+# MQTT topic 模板，{sn} 运行时替换为 robots.yaml 中该机的 sn 字段
+topics:
+  cmd_in:    "robot/{sn}/cmd"    # 服务器 → 机器人（接收命令）
+  rsp_out:   "robot/{sn}/rsp"    # 机器人 → 服务器（命令回包）
+  event_out: "robot/{sn}/event"  # 机器人 → 服务器（主动推送）
+
+gateway:
+  service_timeout: 10.0   # 等待 ROS2 service 响应的超时秒数
+  cmd_queue_size: 100     # 命令队列上限，超出丢弃

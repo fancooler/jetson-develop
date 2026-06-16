@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>tj_marvin_driver</name>
+  <version>0.0.0</version>
+  <description>天机 MaRVIN 双臂 ROS2 驱动（薄包装 jetson-work 的 DualArm，实现通用 arm_interfaces）</description>
+  <maintainer email="lvyongsh@msn.com">lvyong</maintainer>
+  <license>MIT</license>
+
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>arm_interfaces</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>std_srvs</exec_depend>
+  <!-- 运行时还依赖 jetson-work 的 app/（arm_utils, config_dual）+ 天机 SDK，
+       按 app_dir 路径加载，非 ROS 包、不走 rosdep。仅 Jetson(aarch64) 可运行真机。 -->
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

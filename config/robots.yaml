@@ -1,0 +1,38 @@
+# 车队中央配置注册表（fleet registry）
+#
+# 每台机器人一块，集中该机所有硬件标识与网络配置。
+# 各消费方按 $ROBOT_ID 从 $ROBOTS_YAML（由 robot_env.sh 导出）读取：
+#   - domain：robot_env.sh 读 domain_id 导出 ROS_DOMAIN_ID
+#   - 相机：camera.launch.py 读 cameras 段（serial）
+#   - 夹爪：config_dual.py 读 grippers 段（MAC），下游无需改动
+#   - MQTT：task_gateway 读 sn（topic 前缀）和 mqtt.broker（broker 地址）
+#
+# 位置：仓库顶层 config/（不属于任何包，经 $ROBOTS_YAML 读取）。
+# 加新机器人：追加一块填齐所有字段；目标机 ~/.bashrc 设：
+#     export ROBOT_ID=robotN
+#     source <repo>/config/robot_env.sh
+# domain_id 必须每台唯一（DDS 隔离）。
+# 夹爪 MAC 取法：ping 通后 `ip neigh show <夹爪IP>`，去冒号转小写。
+
+robots:
+  robot1:
+    sn: ""                     # 机器人序列号，用于 MQTT topic: robot/{sn}/cmd|rsp|event（待确认）
+    domain_id: 1
+    cameras:
+      head_serial:        "254622074992"   # D435 头部（前向）
+      left_wrist_serial:  "260322273418"   # D405 左腕
+      right_wrist_serial: "260322272642"   # D405 右腕
+    grippers:
+      left_mac:  "3ad820773a85"   # Xense 左爪 MAC（无冒号小写）192.168.1.101
+      right_mac: "72a7da225db7"   # Xense 右爪 MAC（无冒号小写）192.168.1.102
+
+  robot2:
+    sn: "z700/Z700-001"        # 机器人序列号，用于 MQTT topic: robot/{sn}/cmd|rsp|event
+    domain_id: 2
+    cameras:
+      head_serial:        "348122073263"   # D435 头部（前向）
+      left_wrist_serial:  "260322271537"   # D405 左腕
+      right_wrist_serial: "260322275268"   # D405 右腕
+    grippers:
+      left_mac:  "2aedd964439a"   # Xense 左爪 MAC（无冒号小写）
+      right_mac: "06743ba73447"   # Xense 右爪 MAC（无冒号小写）

@@ -1,0 +1,7 @@
+string task_type    # 可选
+int64 template_id   # 可选；0=不过滤
+int64 instance_id   # 可选，跟踪单个实例；0=不过滤
+---
+bool success
+string subscription_id
+string failure_reason

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>xense_gripper_driver</name>
+  <version>0.0.0</version>
+  <description>Xense 双夹爪 ROS2 驱动（薄包装 jetson-work 的 gripper.py，实现通用 gripper_interfaces；独立于机械臂节点）</description>
+  <maintainer email="lvyongsh@msn.com">lvyong</maintainer>
+  <license>MIT</license>
+
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>gripper_interfaces</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>std_srvs</exec_depend>
+  <!-- 运行时还依赖 jetson-work 的 app/gripper.py（+ 真机需 xensegripper SDK），
+       按 app_dir 路径加载，非 ROS 包、不走 rosdep。mock 模式无需 SDK。 -->
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

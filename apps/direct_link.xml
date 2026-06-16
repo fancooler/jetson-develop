@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- FastDDS 网卡白名单：强制本机 ROS2/DDS 只走直连网卡(192.168.50.2)，不走 WiFi。
+     用于 x86 算法服务器(192.168.50.2) ↔ Jetson(192.168.50.1) 千兆直连。
+     用法：export FASTRTPS_DEFAULT_PROFILES_FILE=<本文件绝对路径>
+           export ROS_DOMAIN_ID=1
+           ros2 daemon stop   # 让新 profile 生效，再用
+     ⚠️ 只在 x86 挂；Jetson 端不要挂（否则 ThinkBook 经 WiFi 看不到 Jetson）。 -->
+<dds xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles">
+  <profiles>
+    <transport_descriptors>
+      <transport_descriptor>
+        <transport_id>direct_udp</transport_id>
+        <type>UDPv4</type>
+        <interfaceWhiteList>
+          <address>192.168.50.2</address>   <!-- x86 直连口 IP -->
+          <address>127.0.0.1</address>       <!-- 保留本机回环，x86 本地节点间通信不受影响 -->
+        </interfaceWhiteList>
+      </transport_descriptor>
+    </transport_descriptors>
+    <participant profile_name="direct_link" is_default_profile="true">
+      <rtps>
+        <userTransports>
+          <transport_id>direct_udp</transport_id>
+        </userTransports>
+        <!-- 关掉默认传输(含 SHM 和全网卡 UDP)，只留上面白名单的 UDP，彻底排除 WiFi -->
+        <useBuiltinTransports>false</useBuiltinTransports>
+      </rtps>
+    </participant>
+  </profiles>
+</dds>

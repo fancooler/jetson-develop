@@ -1,0 +1,10 @@
+# 移动末端到目标位姿（base_link 坐标系）
+string arm                    # "left" | "right"
+geometry_msgs/Pose pose       # 位置(m) + 四元数姿态
+bool safe                     # true=IK 结果须通过软限位检查
+float64 timeout               # 秒；<=0 用节点默认
+---
+bool success
+string message
+---
+float64 max_error_deg         # 当前距 IK 目标的最大关节误差（度）
