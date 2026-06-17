@@ -15,7 +15,7 @@ _WORK_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # ── 机械臂连接 ────────────────────────────────────────────────────────────────
 ROBOT_IP  = "192.168.1.190"
-TJ_SDK    = os.path.join(_WORK_DIR, "TJ_marvin/TJ_FX_ROBOT_CONTRL_SDK-master")
+TJ_SDK    = os.path.expanduser("~/develop/thirdparty/arm/TJ_FX_ROBOT_CONTRL_SDK-master")
 CFG_FILE  = os.path.join(TJ_SDK, "ccs_m6_40.MvKDCfg")
 VEL_RATIO      = 10    # 速度百分比（正式使用前先低速调试）
 ACC_RATIO      = 10

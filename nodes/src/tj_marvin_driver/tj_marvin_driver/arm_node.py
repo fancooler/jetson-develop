@@ -94,7 +94,8 @@ class ArmNode(Node):
         super().__init__('tj_marvin_arm')
 
         self.declare_parameter('use_mock', True)
-        self.declare_parameter('app_dir', os.path.expanduser('~/work/app'))
+        self.declare_parameter('app_dir',     os.path.expanduser('~/develop/apps'))
+        self.declare_parameter('drivers_dir', os.path.expanduser('~/develop/drivers'))
         self.declare_parameter('publish_rate', 25.0)
         self.declare_parameter('auto_connect', True)
         self.declare_parameter('reach_tol_deg', 1.0)
@@ -102,21 +103,24 @@ class ArmNode(Node):
 
         gp = self.get_parameter
         self._use_mock = gp('use_mock').get_parameter_value().bool_value
-        self._app_dir = gp('app_dir').get_parameter_value().string_value
+        self._app_dir     = gp('app_dir').get_parameter_value().string_value
+        self._drivers_dir = gp('drivers_dir').get_parameter_value().string_value
         rate = gp('publish_rate').get_parameter_value().double_value
         auto_connect = gp('auto_connect').get_parameter_value().bool_value
         self._tol = gp('reach_tol_deg').get_parameter_value().double_value
         self._default_timeout = gp('default_timeout').get_parameter_value().double_value
 
-        # 引入 jetson-work 的 arm_utils / config_dual（天机 SDK 在 connect 时才懒加载）
-        if self._app_dir not in sys.path:
-            sys.path.insert(0, self._app_dir)
+        # arm_utils 在 drivers/，config_dual 在 apps/，分别加路径
+        for p in (self._drivers_dir, self._app_dir):
+            if p not in sys.path:
+                sys.path.insert(0, p)
         try:
             import arm_utils
             import config_dual
         except Exception as e:
             self.get_logger().fatal(
-                f"无法从 app_dir={self._app_dir} 导入 arm_utils/config_dual: {e}")
+                f"无法导入 arm_utils(drivers_dir={self._drivers_dir}) "
+                f"或 config_dual(app_dir={self._app_dir}): {e}")
             raise
         self._cfg = config_dual
 
