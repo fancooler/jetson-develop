@@ -113,6 +113,10 @@ ros2 launch xense_gripper_driver xense_gripper.launch.py mock_left:=false mock_r
 ```bash
 ros2 launch camera_driver camera.launch.py
 ```
+视触觉传感器（可选）：
+```bash
+ros2 launch tactile_driver tactile.launch.py
+```
 
 **接口清单**（你的程序消费这些）：
 
@@ -126,10 +130,17 @@ ros2 launch camera_driver camera.launch.py
 | 服务 | `/arm/connect` `/release` `/estop` `/enter_position_mode` | `std_srvs/Trigger` |
 | 服务 | `/arm/set_ctrl_mode` | `arm_interfaces/SetCtrlMode` |
 | 服务 | `/arm/enable_streaming` | `std_srvs/SetBool`，开/关流式（与离散动作互斥） |
+| 话题(订阅) | `/arm/wrench_left` `/arm/wrench_right` | `geometry_msgs/WrenchStamped`，末端腕力六维力矩 [fx,fy,fz,tx,ty,tz] |
 | 相机 | `/camera_front\|left_wrist\|right_wrist/color/image_raw[/compressed]` | RGB 图像 |
 | 夹爪(发布) | `/gripper/command` | `gripper_interfaces/GripperCommand`：**流式**目标位置(mm)，side=left/right/both |
 | 夹爪(订阅) | `/gripper/status` | `gripper_interfaces/GripperStatus`：双爪 position(mm)/force/温度/connected |
 | 夹爪(动作/服务) | `/gripper/grip`(Grip 动作)、`/gripper/open\|close\|estop\|connect`(Trigger) | 阻塞到位 / 便捷开合急停 |
+| 视触觉(订阅) | `/tactile/{left,right}/image_raw` | `sensor_msgs/Image` bgr8，校正图像 350×200 |
+| 视触觉(订阅) | `/tactile/{left,right}/depth` | `sensor_msgs/Image` 32FC1，深度图 float32，单位 mm |
+| 视触觉(订阅) | `/tactile/{left,right}/force` | `geometry_msgs/WrenchStamped`，六维合力 [fx,fy,fz,tx,ty,tz] |
+| 视触觉(订阅) | `/tactile/{left,right}/force_map` | `sensor_msgs/Image` bgr8，35×20 力分布图 |
+| 视触觉(订阅) | `/tactile/{left,right}/marker` | `sensor_msgs/Image` 32FC2，35×20 切向位移 |
+| 视触觉(服务) | `/tactile/calibrate` | `std_srvs/Trigger`，重置参考图像（无接触时调用）|
 
 ---
 
@@ -244,3 +255,4 @@ arm.shutdown()
 | 相机一直黑帧 | camera_driver 没跑；无相机就加 `--mock-cameras`；跨网络建议 `--compressed` |
 | 动作返回"流式模式开启中" | 先 `arm.enable_streaming(False)` 再发离散动作 |
 | `cv_bridge` / `cv2` 导入失败 | 装 `ros-humble-desktop` + `pip3 install opencv-python` |
+| `/tactile/*/image_raw` 无数据 | ① tactile_driver 是否在跑（`ros2 node list`） ② 视触觉传感器网线/上电 ③ `ros2 service call /tactile/calibrate std_srvs/srv/Trigger {}` 校准 |
