@@ -36,3 +36,7 @@ except Exception as e:
     unset _RE_DOMAIN
 fi
 unset _RE_DIR _RE_YAML
+
+# drivers/ 下的封装层（arm_utils, gripper_utils, wrench_source, tactile_utils）
+# 加入 PYTHONPATH，让 apps/ 脚本无需修改即可 import
+export PYTHONPATH=$HOME/develop/drivers${PYTHONPATH:+:$PYTHONPATH}

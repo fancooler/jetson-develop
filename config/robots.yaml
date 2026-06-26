@@ -16,12 +16,12 @@
 
 robots:
   robot1:
-    sn: ""                     # 机器人序列号，用于 MQTT topic: robot/{sn}/cmd|rsp|event（待确认）
+    sn: "z700/Z700-000"                     # 机器人序列号，用于 MQTT topic: robot/{sn}/cmd|rsp|event（待确认）
     domain_id: 1
     cameras:
       head_serial:        "254622074992"   # D435 头部（前向）
-      left_wrist_serial:  "260322273418"   # D405 左腕
-      right_wrist_serial: "260322272642"   # D405 右腕
+      left_wrist_serial:  "260322272642"   # D405 左腕
+      right_wrist_serial: "260322271537"   # D405 右腕
     grippers:
       left_mac:  "3ad820773a85"   # Xense 左爪 MAC（无冒号小写）192.168.1.101
       right_mac: "72a7da225db7"   # Xense 右爪 MAC（无冒号小写）192.168.1.102
