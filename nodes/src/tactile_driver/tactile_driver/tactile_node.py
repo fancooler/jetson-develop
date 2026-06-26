@@ -14,7 +14,7 @@ tactile_node.py — Xense 视触觉传感器 ROS2 发布节点
 launch 参数：
   app_dir       (str)  drivers 目录路径，默认 ~/develop/drivers
   publish_rate  (float) 发布频率 Hz，默认 30
-  use_gpu       (bool)  是否使用 GPU，默认 True（SDK 内置模型）
+  use_gpu       (bool)  是否使用 GPU，默认 True
   left_mac      (str)  左传感器算力卡 MAC，从 robots.yaml 读
   right_mac     (str)  右传感器算力卡 MAC，从 robots.yaml 读
 """

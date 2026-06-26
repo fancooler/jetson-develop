@@ -25,7 +25,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         DeclareLaunchArgument('app_dir',      default_value=os.path.expanduser('~/develop/drivers')),
-        DeclareLaunchArgument('publish_rate', default_value='30.0'),
+        DeclareLaunchArgument('publish_rate', default_value='1.0'),
         DeclareLaunchArgument('use_gpu',      default_value='true'),
         DeclareLaunchArgument('left_mac',     default_value=left_mac),
         DeclareLaunchArgument('right_mac',    default_value=right_mac),

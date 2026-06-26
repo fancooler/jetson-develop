@@ -55,7 +55,7 @@ class TactileSensor:
         Args:
             mac_addr:    算力卡 MAC 地址，无冒号小写，如 "3ad820773a85"
             config_path: 个性化标定文件路径或目录；None 时 SDK 使用内置通用配置
-            use_gpu:     是否使用 GPU 推理，默认 True（SDK 内置模型，无需 config_path）
+            use_gpu:     是否使用 GPU 推理，默认 True
         """
         self._sensor = None
         Sensor, self.OutputType = _import_sdk()
