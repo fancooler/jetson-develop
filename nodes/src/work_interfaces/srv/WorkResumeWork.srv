@@ -1,0 +1,6 @@
+string work_instance_id
+string button_id            # 可选，UI 按钮标识，原样回传
+---
+bool success
+string failure_reason
+string button_id

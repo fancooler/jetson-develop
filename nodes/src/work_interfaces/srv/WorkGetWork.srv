@@ -1,0 +1,5 @@
+string work_id
+---
+bool success
+string failure_reason
+WorkDetail work

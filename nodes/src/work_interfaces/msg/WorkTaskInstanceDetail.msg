@@ -1,0 +1,14 @@
+string task_instance_id
+string work_instance_id
+string work_id
+string task_id
+string task_name
+uint32 sequence
+string params_json
+string status
+int32 progress
+int64 created_at
+int64 started_at
+int64 finished_at
+string failure_reason
+string log_summary

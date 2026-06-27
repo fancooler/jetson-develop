@@ -1,0 +1,9 @@
+string work_id
+string work_name
+string work_description
+string param_schema_json
+string work_detail
+bool supports_pause
+string[] applicable_end_effectors
+uint32 task_count
+WorkTaskInfo[] tasks

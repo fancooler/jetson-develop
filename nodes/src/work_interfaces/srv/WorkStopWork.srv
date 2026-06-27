@@ -1,0 +1,9 @@
+string work_instance_id
+string stop_reason          # 可选，审计用
+bool force                  # true=立即中断，不等优雅收尾
+string button_id            # 可选，UI 按钮标识，原样回传
+---
+bool success
+string failure_reason
+bool stopped
+string button_id

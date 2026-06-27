@@ -1,0 +1,5 @@
+string work_instance_id
+---
+bool success
+string failure_reason
+WorkInstanceDetail work_instance

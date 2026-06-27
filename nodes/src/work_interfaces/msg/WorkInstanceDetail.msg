@@ -1,0 +1,22 @@
+string work_instance_id
+string work_id
+string work_name
+string recipe
+string station
+string robot_sn
+string order_no
+string work_description
+string params_json                   # 本次实际执行入参 JSON
+string status
+string priority
+int32 progress
+uint32 current_task_sequence
+uint32 total_task_count
+string current_task_name
+string current_task_instance_id
+int64 created_at
+int64 started_at
+int64 finished_at
+string failure_reason
+string log_summary
+WorkTaskInstanceSummary[] task_instances

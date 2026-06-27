@@ -1,0 +1,5 @@
+# 无请求参数
+---
+bool success
+string failure_reason
+WorkSummary[] works

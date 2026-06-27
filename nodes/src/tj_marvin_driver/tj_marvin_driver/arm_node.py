@@ -454,6 +454,12 @@ class ArmNode(Node):
             targets, perr = self._parse_joint_targets(g.arm, g.joints_left, g.joints_right)
             if perr:
                 return self._finish(goal_handle, MoveToJoints.Result, 'fail', perr)
+            # go_home 完成后 SDK arm_state 会退回 0（下伺服），下一条 set_joint_position_cmd
+            # 仍能拿到 True ACK 但伺服不执行。每次运动前强制重切位置模式保证伺服使能。
+            if not self._use_mock:
+                ok, emsg = self._enter_position_mode()
+                if not ok:
+                    return self._finish(goal_handle, MoveToJoints.Result, 'fail', f"进入位置模式失败: {emsg}")
             timeout = g.timeout if g.timeout > 0 else self._default_timeout
             status, msg = self._drive_to_joints(targets, timeout, goal_handle, MoveToJoints.Feedback)
             return self._finish(goal_handle, MoveToJoints.Result, status, msg)
@@ -508,6 +514,10 @@ class ArmNode(Node):
                 targets['right'] = list(self._cfg.HOME_JOINTS_RIGHT)
             if not targets:
                 return self._finish(goal_handle, GoHome.Result, 'fail', f"arm 非法: {arm!r}")
+            if not self._use_mock:
+                ok, emsg = self._enter_position_mode()
+                if not ok:
+                    return self._finish(goal_handle, GoHome.Result, 'fail', f"进入位置模式失败: {emsg}")
             timeout = g.timeout if g.timeout > 0 else self._default_timeout
             status, msg = self._drive_to_joints(targets, timeout, goal_handle, GoHome.Feedback)
             return self._finish(goal_handle, GoHome.Result, status, msg)

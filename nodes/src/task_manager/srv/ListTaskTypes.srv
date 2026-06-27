@@ -1,0 +1,4 @@
+---
+bool success
+string failure_reason
+TaskTypeInfo[] task_types

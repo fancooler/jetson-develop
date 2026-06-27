@@ -1,0 +1,5 @@
+int64 template_id
+string parameters_json
+---
+bool can_execute
+string failure_reason

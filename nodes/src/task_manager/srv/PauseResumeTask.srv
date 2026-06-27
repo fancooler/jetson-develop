@@ -1,0 +1,6 @@
+int64 instance_id
+string operation
+string reason
+---
+bool success
+string failure_reason

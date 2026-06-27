@@ -1,0 +1,7 @@
+string task_type
+int64 template_id
+int64 instance_id
+---
+bool success
+string subscription_id
+string failure_reason

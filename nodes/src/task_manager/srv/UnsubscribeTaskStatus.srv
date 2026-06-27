@@ -1,0 +1,4 @@
+string subscription_id
+---
+bool success
+string failure_reason

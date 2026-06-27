@@ -1,0 +1,7 @@
+string work_id
+string params_json          # 待校验入参 JSON
+---
+bool success
+string failure_reason
+bool passed
+WorkPrecheckItem[] checks

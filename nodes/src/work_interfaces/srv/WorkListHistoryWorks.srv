@@ -1,0 +1,13 @@
+string status               # 可选：succeeded/failed/terminated；空=不过滤
+int64 start_time            # 可选，Unix 秒；0=不过滤
+int64 end_time              # 可选，Unix 秒；0=不过滤
+uint32 page                 # 页码，默认 1
+uint32 page_size            # 每页条数，0=节点默认值（20）
+---
+bool success
+string failure_reason
+int64 server_time
+uint32 page
+uint32 page_size
+uint32 total                # 符合条件的总记录数
+WorkInstanceSummary[] works

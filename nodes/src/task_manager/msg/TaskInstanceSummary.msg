@@ -1,0 +1,11 @@
+int64 instance_id
+int64 template_id
+string task_type
+string description
+string status
+string progress
+builtin_interfaces/Time submitted_at
+builtin_interfaces/Time started_at
+builtin_interfaces/Time finished_at
+string result
+string failure_reason

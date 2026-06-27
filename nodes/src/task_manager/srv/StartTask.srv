@@ -1,0 +1,8 @@
+int64 template_id
+string parameters_json
+int32 priority
+string idempotency_key
+---
+bool started
+int64 instance_id
+string failure_reason

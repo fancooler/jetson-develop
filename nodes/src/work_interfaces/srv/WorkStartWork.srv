@@ -1,0 +1,12 @@
+string work_id
+string params_json          # 执行入参 JSON
+string priority             # low/normal/high；空=normal
+string idempotency_key      # 可选，防重复下发
+string button_id            # 可选，UI 按钮标识，原样回传
+---
+bool success
+string failure_reason
+bool started
+string work_instance_id
+string status               # executing 或 queued
+string button_id

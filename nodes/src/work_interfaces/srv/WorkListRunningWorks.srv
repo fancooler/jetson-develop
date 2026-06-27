@@ -1,0 +1,10 @@
+# 无请求参数
+---
+bool success
+string failure_reason
+int64 server_time
+uint32 executing_count
+uint32 queued_count
+uint32 paused_count
+uint32 total_count
+WorkInstanceSummary[] works

@@ -1,0 +1,7 @@
+string task_type
+int64 template_id
+string status
+---
+bool success
+string failure_reason
+TaskInstanceSummary[] instances

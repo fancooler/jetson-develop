@@ -1,0 +1,6 @@
+int64 instance_id
+string reason
+bool force
+---
+bool terminated
+string failure_reason

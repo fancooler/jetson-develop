@@ -1,0 +1,5 @@
+string task_type
+---
+bool success
+string failure_reason
+TaskTemplateSummary[] templates
