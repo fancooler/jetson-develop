@@ -69,6 +69,19 @@ if pgrep -f "$KILL_PAT" >/dev/null; then
 fi
 echo "  旧节点已清理"
 
+# 清理天机 SDK 共享内存（异常退出或系统重启后残留 → 重连 port is occupied）
+rm -f /dev/shm/ipc_test_0 /dev/shm/ipc_test_a_0 /dev/shm/ipc_test_b_0 \
+      /dev/shm/ipc_test_c_0 /dev/shm/itc_test_0 \
+      /dev/shm/sem.ipc_test_0 /dev/shm/sem.ipc_test_a_0 /dev/shm/sem.ipc_test_b_0 \
+      /dev/shm/sem.ipc_test_c_0 /dev/shm/sem.itc_test_0 2>/dev/null || \
+  sudo rm -f /dev/shm/ipc_test_0 /dev/shm/ipc_test_a_0 /dev/shm/ipc_test_b_0 \
+             /dev/shm/ipc_test_c_0 /dev/shm/itc_test_0 \
+             /dev/shm/sem.ipc_test_0 /dev/shm/sem.ipc_test_a_0 /dev/shm/sem.ipc_test_b_0 \
+             /dev/shm/sem.ipc_test_c_0 /dev/shm/sem.itc_test_0 2>/dev/null
+# 清理 FastDDS SHM（防止 ros2 daemon 因残留文件无法发现节点）
+rm -f /dev/shm/fastrtps_* /dev/shm/sem.fastrtps_* 2>/dev/null
+ros2 daemon stop 2>/dev/null; ros2 daemon start 2>/dev/null
+
 if $STOP_ONLY; then echo "==== --stop：只杀不启，完成 ===="; exit 0; fi
 
 # ── 清理 ~/.ros/log 历史运行目录（保留最近 KEEP_ROS_LOG_RUNS 个）──
@@ -101,11 +114,14 @@ setsid ros2 launch tactile_driver      tactile.launch.py                  \
 echo "  已后台启动；日志：$LOGDIR/{arm,gripper,camera,tactile}.log"
 
 # ── 等臂节点就绪且已连接，再回零 ──
-echo "==== [3] 等臂连接（最多 ~25s）===="
+echo “==== [3] 等臂连接（最多 ~25s）====”
 ARM_OK=false
 for _ in $(seq 1 50); do
-  if timeout 2 ros2 topic echo /arm/status --once 2>/dev/null | grep -q "connected: true"; then
+  if grep -q “已连接” “$LOGDIR/arm.log” 2>/dev/null; then
     ARM_OK=true; break
+  fi
+  if grep -q “连接失败\|port is occupied” “$LOGDIR/arm.log” 2>/dev/null; then
+    break
   fi
   sleep 0.5
 done
@@ -132,7 +148,7 @@ if $DO_HOME; then
   echo "==== [4] 等夹爪连接（最多 ~20s）===="
   GRIP_OK=false
   for _ in $(seq 1 40); do
-    if timeout 2 ros2 topic echo /gripper/status --once 2>/dev/null | grep -q "connected: true"; then
+    if grep -qiE "connected|已连接|就绪" "$LOGDIR/gripper.log" 2>/dev/null; then
       GRIP_OK=true; break
     fi
     sleep 0.5
