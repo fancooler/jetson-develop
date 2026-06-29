@@ -31,7 +31,7 @@ robots:
     domain_id: 2
     cameras:
       head_serial:        "348122073263"   # D435 头部（前向）
-      left_wrist_serial:  "260322271537"   # D405 左腕
+      left_wrist_serial:  "260322273418"   # D405 左腕
       right_wrist_serial: "260322275268"   # D405 右腕
     grippers:
       left_mac:  "2aedd964439a"   # Xense 左爪 MAC（无冒号小写）
