@@ -454,9 +454,9 @@ class ArmNode(Node):
             targets, perr = self._parse_joint_targets(g.arm, g.joints_left, g.joints_right)
             if perr:
                 return self._finish(goal_handle, MoveToJoints.Result, 'fail', perr)
-            # go_home 完成后 SDK arm_state 会退回 0（下伺服），下一条 set_joint_position_cmd
-            # 仍能拿到 True ACK 但伺服不执行。每次运动前强制重切位置模式保证伺服使能。
-            if not self._use_mock:
+            # 已在位置模式时跳过 enter_position_mode（servo_reset × 14 会导致 SDK 拒绝重复切换）。
+            # go_home 后 arm_state 可能退回 0，但 send_joints 内部已有 set_position_state 重试，无需在此处理。
+            if not self._use_mock and self._ctrl_mode != 'position':
                 ok, emsg = self._enter_position_mode()
                 if not ok:
                     return self._finish(goal_handle, MoveToJoints.Result, 'fail', f"进入位置模式失败: {emsg}")
