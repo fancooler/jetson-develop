@@ -727,21 +727,31 @@ class DualArm:
         cfg = _cfg()
         for a in arms:
             cmd = _ARM_CMD[a]
-            # 软复位 7 个伺服轴（清残留错误状态，Concise_Marvin_Robot 没有 clear_error）
-            for axis in range(7):
-                try:
-                    self._robot.servo_reset(arm=cmd, axis=axis)
-                except Exception as e:
-                    logger.warning(f"[{a}] servo_reset axis={axis} 异常（继续）: {e}")
-            # 切位置跟随 + 设置 vel/acc（内部调用 SetJointMode）
+            # 先不做 servo_reset，直接尝试切换：
+            #   - 已在位置模式时：SDK 直接返回 True，无副作用
+            #   - go_home 后 arm_state 退回 0 时：set_position_state 重新使能伺服
+            # servo_reset 只在首次失败后才做（清残留错误），避免 servo_reset 之后
+            # SDK 拒绝重复切换（返回 False）导致 enter_position_mode 必现失败。
             ok_pos = self._robot.set_position_state(
                 arm=cmd,
                 velRatio=cfg.VEL_RATIO,
                 AccRatio=cfg.ACC_RATIO,
             )
             if not ok_pos:
-                logger.error(f"[{a}] set_position_state 失败")
-                return False
+                # 有残留错误：servo_reset 后重试
+                for axis in range(7):
+                    try:
+                        self._robot.servo_reset(arm=cmd, axis=axis)
+                    except Exception as e:
+                        logger.warning(f"[{a}] servo_reset axis={axis} 异常（继续）: {e}")
+                ok_pos = self._robot.set_position_state(
+                    arm=cmd,
+                    velRatio=cfg.VEL_RATIO,
+                    AccRatio=cfg.ACC_RATIO,
+                )
+                if not ok_pos:
+                    logger.error(f"[{a}] set_position_state 失败")
+                    return False
         time.sleep(1.0)   # 等模式切换完成
         logger.info(f"已切到位置跟随模式: {arms}")
         return True
