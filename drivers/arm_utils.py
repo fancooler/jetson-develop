@@ -725,34 +725,41 @@ class DualArm:
         self._assert_connected()
         arms = ['left', 'right'] if arm == 'both' else [arm]
         cfg = _cfg()
-        for a in arms:
-            cmd = _ARM_CMD[a]
-            # 先不做 servo_reset，直接尝试切换：
-            #   - 已在位置模式时：SDK 直接返回 True，无副作用
-            #   - go_home 后 arm_state 退回 0 时：set_position_state 重新使能伺服
-            # servo_reset 只在首次失败后才做（清残留错误），避免 servo_reset 之后
-            # SDK 拒绝重复切换（返回 False）导致 enter_position_mode 必现失败。
-            ok_pos = self._robot.set_position_state(
-                arm=cmd,
-                velRatio=cfg.VEL_RATIO,
-                AccRatio=cfg.ACC_RATIO,
-            )
-            if not ok_pos:
-                # 有残留错误：servo_reset 后重试
-                for axis in range(7):
-                    try:
-                        self._robot.servo_reset(arm=cmd, axis=axis)
-                    except Exception as e:
-                        logger.warning(f"[{a}] servo_reset axis={axis} 异常（继续）: {e}")
-                ok_pos = self._robot.set_position_state(
-                    arm=cmd,
+
+        def _set_pos_all() -> bool:
+            for a in arms:
+                ok = self._robot.set_position_state(
+                    arm=_ARM_CMD[a],
                     velRatio=cfg.VEL_RATIO,
                     AccRatio=cfg.ACC_RATIO,
                 )
-                if not ok_pos:
-                    logger.error(f"[{a}] set_position_state 失败")
+                if not ok:
+                    logger.warning(f"[{a}] set_position_state 返回 False")
                     return False
-        time.sleep(1.0)   # 等模式切换完成
+            return True
+
+        # 先不做 servo_reset 直接尝试（已在位置模式 / go_home 后均可直接成功）
+        if _set_pos_all():
+            time.sleep(1.0)
+            logger.info(f"已切到位置跟随模式: {arms}")
+            return True
+
+        # SDK 检查双臂状态：任一臂有问题都会导致失败。
+        # 对所有目标臂统一 servo_reset 后再重试，避免只 reset 一臂、另一臂仍报错。
+        logger.info("首次 set_position_state 失败，servo_reset 全部目标臂后重试")
+        for a in arms:
+            cmd = _ARM_CMD[a]
+            for axis in range(7):
+                try:
+                    self._robot.servo_reset(arm=cmd, axis=axis)
+                except Exception as e:
+                    logger.warning(f"[{a}] servo_reset axis={axis} 异常（继续）: {e}")
+
+        if not _set_pos_all():
+            logger.error(f"servo_reset 后 set_position_state 仍失败，检查臂硬件状态")
+            return False
+
+        time.sleep(1.0)
         logger.info(f"已切到位置跟随模式: {arms}")
         return True
 
