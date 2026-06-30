@@ -129,15 +129,18 @@ done
 if ! $ARM_OK; then
   echo “  ⚠️ 臂未在预期时间内连上，跳过使能/回零。查 $LOGDIR/arm.log（port is occupied / 网线 / 控制器）”
 else
-  # 关键顺序：先 enter-pos 使能伺服，再 go_home（不能反过来）。
+  # 关键顺序：先 enter-pos 使能伺服，再 go_home，go_home 完成后再 enter-pos。
   # enter-pos 做 servo_reset（松刹车、出”咔哒”）+ set_position_state，必须先于任何运动指令。
-  # 否则首发 go_home 时伺服常未使能 → set_joint_position_cmd 被控制器拒（返回 False）→ 回零失败；
-  # 手动重试”碰巧”成功，正是因为那次的 enter-pos 已先把伺服使能了。
+  # 否则首发 go_home 时伺服常未使能 → set_joint_position_cmd 被控制器拒（返回 False）→ 回零失败。
+  # go_home 完成后 SDK arm_state 会回退到 0，streaming 指令虽返回 True 但伺服不执行（假 True）；
+  # 第二次 enter-pos 重新使能，确保 streaming 开启前伺服处于位置跟随状态。
   echo “  → 进入位置跟随模式（伺服使能，应听到”咔哒”一声）”
   ros2 run arm_client arm_cli enter-pos
   if $DO_HOME; then
     echo “  伺服已使能 → 双臂回零”
     ros2 run arm_client arm_cli home both
+    echo “  → 回零完成，重新进入位置跟随模式（防 arm_state 回退）”
+    ros2 run arm_client arm_cli enter-pos
   else
     echo “  （--no-home，跳过回零）”
   fi
