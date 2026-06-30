@@ -271,12 +271,14 @@ class _ArmCore:
         if ok:
             return True
         # 重切位置模式 + 重试（go_home 完成后 SDK 状态可能回退）
+        logger.warning(f"[{self.arm_str}] set_joint_position_cmd 首次失败，尝试重切位置模式")
         cfg = _cfg()
         if not self._robot.set_position_state(
             arm=self.arm_cmd,
             velRatio=cfg.VEL_RATIO,
             AccRatio=cfg.ACC_RATIO,
         ):
+            logger.error(f"[{self.arm_str}] 重切位置模式失败，流式指令丢弃")
             return False
         time.sleep(0.3)
         return self._robot.set_joint_position_cmd(arm=self.arm_cmd, joint=joints)

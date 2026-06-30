@@ -360,7 +360,17 @@ class ArmNode(Node):
         with self._lock:
             for arm, j in targets.items():
                 try:
-                    self._da.move_joints(arm, list(j), safe=True)
+                    ok = self._da.move_joints(arm, list(j), safe=True)
+                    if ok:
+                        self.get_logger().info(
+                            f"[{arm}] 流式指令已下发 joints="
+                            f"[{', '.join(f'{v:.1f}' for v in j)}]°",
+                            throttle_duration_sec=2.0)
+                    else:
+                        self.get_logger().warn(
+                            f"[{arm}] 流式指令 SDK 下发失败 joints="
+                            f"[{', '.join(f'{v:.1f}' for v in j)}]°",
+                            throttle_duration_sec=2.0)
                 except Exception as e:
                     self.get_logger().warn(f"流式 move_joints({arm}) 异常: {e}",
                                            throttle_duration_sec=2.0)
