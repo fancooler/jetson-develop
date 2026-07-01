@@ -360,7 +360,7 @@ class ArmNode(Node):
         with self._lock:
             for arm, j in targets.items():
                 try:
-                    ok = self._da.move_joints(arm, list(j), safe=True)
+                    ok = self._da.move_joints(arm, list(j), safe=True, retry=False)
                     if ok:
                         self.get_logger().info(
                             f"[{arm}] 流式指令已下发 joints="

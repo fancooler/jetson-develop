@@ -262,14 +262,19 @@ class _ArmCore:
 
     # ── 指令 ──────────────────────────────────────────────────────────────────
 
-    def send_joints(self, joints: list) -> bool:
+    def send_joints(self, joints: list, retry: bool = True) -> bool:
         """非阻塞下发关节位置指令。
 
-        若首次失败（SDK 不在位置模式），自动重切位置模式后重试一次。
+        retry=True（默认）：首次失败时重切位置模式后重试一次，用于离散动作场景。
+        retry=False：首次失败直接返回，用于流式场景——流式高频调用时重切模式会
+                     打乱控制器节奏，可能触发硬件保护。
         """
         ok = self._robot.set_joint_position_cmd(arm=self.arm_cmd, joint=joints)
         if ok:
             return True
+        if not retry:
+            logger.warning(f"[{self.arm_str}] set_joint_position_cmd 失败（流式，跳过重切）")
+            return False
         # 重切位置模式 + 重试（go_home 完成后 SDK 状态可能回退）
         logger.warning(f"[{self.arm_str}] set_joint_position_cmd 首次失败，尝试重切位置模式")
         cfg = _cfg()
@@ -278,7 +283,7 @@ class _ArmCore:
             velRatio=cfg.VEL_RATIO,
             AccRatio=cfg.ACC_RATIO,
         ):
-            logger.error(f"[{self.arm_str}] 重切位置模式失败，流式指令丢弃")
+            logger.error(f"[{self.arm_str}] 重切位置模式失败")
             return False
         time.sleep(0.3)
         return self._robot.set_joint_position_cmd(arm=self.arm_cmd, joint=joints)
@@ -946,7 +951,8 @@ class DualArm:
             else:
                 print("  变换失败")
 
-    def move_joints(self, arm: str, joints: list, safe: bool = True) -> bool:
+    def move_joints(self, arm: str, joints: list, safe: bool = True,
+                    retry: bool = True) -> bool:
         """
         单臂关节角指令（非阻塞）。指令下发后立即返回，控制器自行插值到目标。
 
@@ -954,6 +960,7 @@ class DualArm:
             arm:    'left' 或 'right'
             joints: 目标关节角，度，长度 7
             safe:   True = 先做软限位检查，超限则拦截
+            retry:  False = 流式场景，SDK 失败时不重切位置模式
 
         Returns:
             True = 指令已下发；False = 软限位拦截或 SDK 调用失败
@@ -965,7 +972,7 @@ class DualArm:
                 f"joints=[{', '.join(f'{v:.1f}' for v in joints)}]°"
             )
             return False
-        return self._cores[arm].send_joints(joints)
+        return self._cores[arm].send_joints(joints, retry=retry)
 
     def move_joints_both(self,
                           joints_left:  list,
