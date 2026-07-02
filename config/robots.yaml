@@ -16,7 +16,8 @@
 
 robots:
   robot1:
-    sn: "z700/Z700-000"                     # 机器人序列号，用于 MQTT topic: robot/{sn}/cmd|rsp|event（待确认）
+    sn: "Z700-001"                     # 机器人序列号，用于 MQTT topic: robot/{sn}/cmd|rsp|event（待确认）
+    type: "z700"
     domain_id: 1
     cameras:
       head_serial:        "254622074992"   # D435 头部（前向）
@@ -27,8 +28,21 @@ robots:
       right_mac: "72a7da225db7"   # Xense 右爪 MAC（无冒号小写）192.168.1.102
 
   robot2:
-    sn: "z700/Z700-001"        # 机器人序列号，用于 MQTT topic: robot/{sn}/cmd|rsp|event
+    sn: "Z700-002"        # 机器人序列号，用于 MQTT topic: robot/{sn}/cmd|rsp|event
+    type: "z700"
     domain_id: 2
+    cameras:
+      head_serial:        "348122073263"   # D435 头部（前向）
+      left_wrist_serial:  "260322273418"   # D405 左腕
+      right_wrist_serial: "260322275268"   # D405 右腕
+    grippers:
+      left_mac:  "2aedd964439a"   # Xense 左爪 MAC（无冒号小写）
+      right_mac: "06743ba73447"   # Xense 右爪 MAC（无冒号小写）
+      
+  robot3:
+    sn: "Z700-003"        # 机器人序列号，用于 MQTT topic: robot/{sn}/cmd|rsp|event
+    type: "z700"
+    domain_id: 3
     cameras:
       head_serial:        "348122073263"   # D435 头部（前向）
       left_wrist_serial:  "260322273418"   # D405 左腕

@@ -318,8 +318,18 @@ def _do_connect(robot, dcss, cfg) -> Optional[dict]:
     """
     logger.info(f"连接机械臂 {cfg.ROBOT_IP} ...")
     if not robot.connect(robot_ip=cfg.ROBOT_IP, log_switch=0):
-        logger.error("连接失败，请检查网线和 IP")
-        return None
+        # CheckServoError 失败时 TCP 仍存活（C++ Connect() 不关连接）。
+        # 尝试清 B 臂 servo 错误后关闭 TCP 再重连，解决双臂同时报错时只清 A 的问题。
+        try:
+            robot.clear_error('B')
+            time.sleep(0.5)
+            robot.release_robot()
+            time.sleep(3.0)
+        except Exception:
+            pass
+        if not robot.connect(robot_ip=cfg.ROBOT_IP, log_switch=0):
+            logger.error("连接失败，请检查网线和 IP")
+            return None
 
     # UDP 数据帧验证
     prev, cnt = None, 0
